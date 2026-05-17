@@ -1,0 +1,18 @@
+﻿using System;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace Cw7.Models;
+
+[Table("ComponentManufacturers")]
+public class ComponentManufacturer
+{
+    [Key]
+    public int Id { get; set; }
+    [MaxLength(30)]
+    public string Abrreviation { get; set; }
+    [MaxLength(300)]
+    public string FullName { get; set; }
+    [Column(TypeName = "date")]
+    public DateTime FoundationDate { get; set; }
+}
