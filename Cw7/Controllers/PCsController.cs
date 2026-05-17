@@ -11,13 +11,13 @@ namespace Cw7.Controllers;
 public class PCsController(IComputerService service) : ControllerBase
 {
     [HttpGet]
-    public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
+    public async Task<IActionResult> GetAllAsync(CancellationToken cancellationToken)
     {
         return Ok(await service.GetPCsAsync(cancellationToken));
     }
 
     [HttpGet("{id:int}/components")]
-    public async Task<IActionResult> GetComponents(int id, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetComponentsAsync(int id, CancellationToken cancellationToken)
     {
         var componentsDto = await service.GetPcComponentsAsync(id, cancellationToken);
         if (componentsDto is null)
@@ -28,13 +28,13 @@ public class PCsController(IComputerService service) : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreatePc([FromBody] CreatePcDto pc, CancellationToken cancellationToken)
+    public async Task<IActionResult> CreatePcAsync([FromBody] CreatePcDto pc, CancellationToken cancellationToken)
     {
         return Created("Added pc", await service.CreatePCAsync(pc,cancellationToken));
     }
 
     [HttpPut("{id:int}")]
-    public async Task<IActionResult> PutPc([FromBody] CreatePcDto pc, int id, CancellationToken cancellationToken)
+    public async Task<IActionResult> PutPcAsync([FromBody] CreatePcDto pc, int id, CancellationToken cancellationToken)
     {
         try
         {
@@ -44,6 +44,19 @@ public class PCsController(IComputerService service) : ControllerBase
             return NotFound(ex.Message);
         }
 
+        return NoContent();
+    }
+
+    [HttpDelete("{id:int}")]
+    public async Task<IActionResult> DeletePcAsync(int id, CancellationToken cancellationToken)
+    {
+        try
+        {
+            await service.DeletePcAsync(id,cancellationToken);
+        } catch(NotFoundException ex)
+        {
+            return NotFound(ex.Message);
+        }
         return NoContent();
     }
 }

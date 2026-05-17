@@ -8,4 +8,5 @@ public interface IComputerService
     Task<PCComponentsResponseDto?> GetPcComponentsAsync(int id, CancellationToken cancellationToken);
     Task<PCDto> CreatePCAsync(CreatePcDto pc, CancellationToken cancellationToken);
     Task PutPcAsync(CreatePcDto pc, int id, CancellationToken cancellationToken);
+    Task DeletePcAsync(int id, CancellationToken cancellationToken);
 }

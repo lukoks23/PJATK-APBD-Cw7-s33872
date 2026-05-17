@@ -78,4 +78,13 @@ public class ComputerService(DatabaseContext ctx) : IComputerService
             throw new NotFoundException($"PC with id: {id} not found");
         }
     }
+
+    public async Task DeletePcAsync(int id, CancellationToken cancellationToken)
+    {
+        int affectedRows = await ctx.PCs.Where(pc => pc.Id == id).ExecuteDeleteAsync(cancellationToken);
+        if (affectedRows == 0)
+        {
+            throw new NotFoundException($"PC with id: {id} not found");
+        }
+    }
 }
