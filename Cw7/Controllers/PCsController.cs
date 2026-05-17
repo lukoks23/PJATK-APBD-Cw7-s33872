@@ -1,4 +1,5 @@
 ﻿using Cw7.DTOs;
+using Cw7.Exceptions;
 using Cw7.Models;
 using Cw7.Service;
 using Microsoft.AspNetCore.Mvc;
@@ -27,8 +28,22 @@ public class PCsController(IComputerService service) : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreatePC([FromBody] CreatePcDto pc, CancellationToken cancellationToken)
+    public async Task<IActionResult> CreatePc([FromBody] CreatePcDto pc, CancellationToken cancellationToken)
     {
-        return Created("Added pc",service.CreatePCAsync(pc,cancellationToken));
+        return Created("Added pc", await service.CreatePCAsync(pc,cancellationToken));
+    }
+
+    [HttpPut("{id:int}")]
+    public async Task<IActionResult> PutPc([FromBody] CreatePcDto pc, int id, CancellationToken cancellationToken)
+    {
+        try
+        {
+            await service.PutPcAsync(pc, id, cancellationToken);
+        } catch (NotFoundException ex)
+        {
+            return NotFound(ex.Message);
+        }
+
+        return NoContent();
     }
 }

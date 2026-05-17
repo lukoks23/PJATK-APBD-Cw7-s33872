@@ -1,4 +1,5 @@
 ﻿using Cw7.DTOs;
+using Cw7.Exceptions;
 using Cw7.Infrastructure;
 using Cw7.Models;
 using Microsoft.EntityFrameworkCore;
@@ -64,5 +65,17 @@ public class ComputerService(DatabaseContext ctx) : IComputerService
         await ctx.AddAsync(PC,cancellationToken);
         await ctx.SaveChangesAsync(cancellationToken);
         return new PCDto(PC.Id,PC.Name,PC.Weight,PC.Warranty,PC.CreatedAt,PC.Stock);
+    }
+
+    public async Task PutPcAsync(CreatePcDto pc, int id, CancellationToken cancellationToken)
+    {
+        int affectedRows = await ctx.PCs.Where(pc => pc.Id == id).ExecuteUpdateAsync(
+            setters => setters.SetProperty(e => e.Name, pc.name).SetProperty(e => e.Warranty, pc.warranty)
+                .SetProperty(e => e.Weight, pc.weight).SetProperty(e => e.CreatedAt, pc.createdAt)
+                .SetProperty(e => e.Stock, pc.stock), cancellationToken);
+        if (affectedRows == 0)
+        {
+            throw new NotFoundException($"PC with id: {id} not found");
+        }
     }
 }
